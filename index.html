@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FiNeTCAD — AutoCAD Civil 3D Mühendislik ve Altyapı Araçları</title>
+  <meta name="description" content="AutoCAD Civil 3D 2025, 2026 ve 2027 için profesyonel nokta, kesit, yüzey, LandXML ve KML/KMZ mühendislik eklenti paketi." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <style>
+    :root {
+      --bg: #141920;
+      --bg-soft: #1A2028;
+      --card: #242C37;
+      --border: #364252;
+      --text: #ECF1F7;
+      --muted: #98A6B8;
+      --blue: #0EA5E9;
+      --blue-hover: #0284C7;
+      --green: #22C55E;
+      --green-hover: #16A34A;
+      --amber: #F59E0B;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 0%, #1F2B3A 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 22px; }
+
+    /* Navbar */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(20, 25, 32, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px; gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.15rem; }
+    .brand img { width: 38px; height: 38px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 22px; font-size: 0.94rem; color: var(--muted); }
+    .nav-links a:hover { color: var(--text); }
+    .lang-btn {
+      background: var(--card); color: var(--text); border: 1px solid var(--border);
+      padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+    }
+    .lang-btn:hover { border-color: var(--blue); }
+
+    /* Hero */
+    .hero { padding: 72px 0 54px; text-align: center; }
+    .badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px; font-size: 0.84rem; font-weight: 600;
+      background: rgba(14, 165, 233, 0.14); border: 1px solid rgba(14, 165, 233, 0.4); color: #7DD3FC;
+    }
+    .badge.green {
+      background: rgba(34, 197, 94, 0.14); border-color: rgba(34, 197, 94, 0.4); color: #86EFAC;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4.3vw, 3.15rem); line-height: 1.18;
+      margin-bottom: 18px; letter-spacing: -0.02em;
+    }
+    .hero p {
+      max-width: 740px; margin: 0 auto 30px; color: var(--muted); font-size: 1.06rem;
+    }
+    .cta-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 13px 22px; border-radius: 10px; font-weight: 600; font-size: 0.96rem;
+      border: 1px solid transparent; cursor: pointer; transition: 0.18s ease;
+    }
+    .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--blue-hover); transform: translateY(-1px); }
+    .btn-green { background: var(--green); color: #0B1910; }
+    .btn-green:hover { background: var(--green-hover); color: #fff; transform: translateY(-1px); }
+    .btn-secondary { background: var(--card); color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { border-color: var(--blue); transform: translateY(-1px); }
+    .btn-sub { display: block; font-size: 0.74rem; font-weight: 500; opacity: 0.88; }
+    .btn-col { text-align: left; line-height: 1.25; }
+    .meta-note { font-size: 0.86rem; color: var(--muted); }
+
+    /* Sections */
+    section { padding: 54px 0; }
+    .section-head { text-align: center; margin-bottom: 34px; }
+    .section-head h2 { font-size: 1.85rem; margin-bottom: 8px; }
+    .section-head p { color: var(--muted); max-width: 660px; margin: 0 auto; }
+
+    /* Grid & Cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 22px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .tag {
+      font-size: 0.76rem; font-weight: 600; letter-spacing: 0.01em;
+      padding: 3px 10px; border-radius: 6px; background: rgba(14, 165, 233, 0.15); color: #7DD3FC;
+    }
+    .tag.green { background: rgba(34, 197, 94, 0.16); color: #86EFAC; }
+    .tag.soon { background: rgba(245, 158, 11, 0.16); color: #FCD34D; }
+    .cmd { font-family: Consolas, monospace; font-size: 0.78rem; color: var(--muted); }
+    .card h3 { font-size: 1.07rem; }
+    .card p { font-size: 0.92rem; color: var(--muted); }
+
+    /* Install Steps */
+    .install-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .step-list li { display: flex; gap: 10px; font-size: 0.91rem; color: var(--muted); }
+    .step-num {
+      flex: 0 0 23px; height: 23px; border-radius: 50%; background: var(--blue); color: #fff;
+      font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .step-num.green { background: var(--green); color: #0B1910; }
+    code {
+      background: var(--bg); border: 1px solid var(--border); padding: 2px 6px;
+      border-radius: 5px; font-family: Consolas, monospace; font-size: 0.82rem; color: #BAE6FD;
+      word-break: break-all;
+    }
+    .path-box {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 10px; margin: 4px 0;
+    }
+    .path-box code { border: none; padding: 0; background: transparent; }
+    .copy-mini {
+      background: var(--card); color: var(--text); border: 1px solid var(--border);
+      padding: 4px 9px; border-radius: 6px; font-size: 0.76rem; font-weight: 600;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .copy-mini:hover { border-color: var(--blue); }
+    .tip-note {
+      margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--border);
+      font-size: 0.82rem; color: var(--muted);
+    }
+
+    /* Plans */
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .plan-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 26px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .plan-card.featured { border-color: var(--blue); box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.3); }
+    .plan-price { font-size: 1.42rem; font-weight: 700; color: var(--green); }
+    .plan-list { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.92rem; color: var(--muted); }
+    .plan-list li::before { content: "✓ "; color: var(--green); font-weight: 700; }
+
+    /* Contact & Social */
+    .contact-box {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.14), rgba(36, 44, 55, 0.96));
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 34px 26px; text-align: center;
+    }
+    .contact-box p { color: var(--muted); margin: 10px auto 24px; max-width: 640px; }
+    .social-grid {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 12px;
+    }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 11px 18px; border-radius: 10px;
+      background: var(--bg-soft); border: 1px solid var(--border);
+      font-size: 0.92rem; font-weight: 600; color: var(--text);
+      transition: 0.18s ease;
+    }
+    .social-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
+    .social-btn:hover { transform: translateY(-2px); border-color: var(--blue); }
+    .social-btn.mail:hover { border-color: #38BDF8; color: #7DD3FC; }
+    .social-btn.yt:hover { border-color: #FF0000; color: #FCA5A5; }
+    .social-btn.ig:hover { border-color: #E1306C; color: #F9A8D4; }
+    .social-btn.x:hover { border-color: #E2E8F0; color: #FFFFFF; }
+    .social-btn.li:hover { border-color: #0A66C2; color: #93C5FD; }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 26px 0; margin-top: 30px;
+      color: var(--muted); font-size: 0.88rem;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+
+    @media (max-width: 760px) {
+      .nav-links a.hide-sm { display: none; }
+      .hero { padding: 48px 0 36px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">
+        <img src="logo.png" alt="FiNeTCAD Logo" onerror="this.style.display='none'" />
+        <span>FiNeTCAD</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#araclar" class="hide-sm" data-tr="Araçlar" data-en="Tools">Araçlar</a>
+        <a href="#kurulum" class="hide-sm" data-tr="Kurulum" data-en="Installation">Kurulum</a>
+        <a href="#paketler" class="hide-sm" data-tr="Paketler" data-en="Plans">Paketler</a>
+        <a href="#iletisim" class="hide-sm" data-tr="İletişim" data-en="Contact">İletişim</a>
+        <button id="langToggle" class="lang-btn" type="button">EN</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="badges">
+          <span class="badge">Civil 3D 2025 / 2026 / 2027</span>
+          <span class="badge green" id="liveVersion" data-tr="Sürüm kontrol ediliyor..." data-en="Checking version...">Sürüm kontrol ediliyor...</span>
+        </div>
+        <h1 data-tr="AutoCAD Civil 3D için Hızlı ve Güvenilir Mühendislik Paketi"
+            data-en="Fast and Reliable Engineering Automation Suite for Civil 3D">
+          AutoCAD Civil 3D için Hızlı ve Güvenilir Mühendislik Paketi
+        </h1>
+        <p data-tr="Harita, altyapı, demiryolu ve karayolu projelerinde tekrarlayan nokta, kesit, yüzey ve Google Earth aktarım işlerini tek şerit (Ribbon) altında saniyelere indiren yerli .NET eklenti paketi."
+           data-en="A native .NET add-in suite bringing point, cross-section, surface, LandXML, and Google Earth KML/KMZ workflows together under one Civil 3D ribbon.">
+          Harita, altyapı, demiryolu ve karayolu projelerinde tekrarlayan nokta, kesit, yüzey ve Google Earth aktarım işlerini tek şerit (Ribbon) altında saniyelere indiren yerli .NET eklenti paketi.
+        </p>
+
+        <div class="cta-row">
+          <a id="downloadExeBtn" href="#kurulum" class="btn btn-green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="btn-col">
+              <span id="exeBtnTitle" data-tr="Kurulum Sihirbazı İndir (EXE)" data-en="Download Installer (EXE)">Kurulum Sihirbazı İndir (EXE)</span>
+              <span class="btn-sub" id="exeBtnSub" data-tr="Kişisel bilgisayarlar için (Tek tıkla kurulum)" data-en="For personal PCs (One-click setup)">Kişisel bilgisayarlar için (Tek tıkla kurulum)</span>
+            </span>
+          </a>
+
+          <a id="downloadZipBtn" href="#kurulum" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="btn-col">
+              <span id="zipBtnTitle" data-tr="Taşınabilir Paket İndir (ZIP)" data-en="Download Portable Package (ZIP)">Taşınabilir Paket İndir (ZIP)</span>
+              <span class="btn-sub" data-tr="Kurumsal ve kısıtlı bilgisayarlar için" data-en="For corporate &amp; restricted PCs">Kurumsal ve kısıtlı bilgisayarlar için</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="meta-note" data-tr="Yönetici yetkisi gerektirmez • Kurumsal bilgisayarlarla uyumlu • Tek tıkla otomatik güncelleme"
+             data-en="No admin rights required • Corporate PC friendly • One-click auto-updater">
+          Yönetici yetkisi gerektirmez • Kurumsal bilgisayarlarla uyumlu • Tek tıkla otomatik güncelleme
+        </div>
+      </div>
+    </section>
+
+    <section id="araclar">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-tr="Eklenti Araçları" data-en="Included Tools">Eklenti Araçları</h2>
+          <p data-tr="Civil 3D 2025, 2026 ve 2027 sürümlerinde tek kurulum paketiyle otomatik yüklenir."
+             data-en="Single package automatically detects and loads for Civil 3D 2025, 2026, and 2027.">
+            Civil 3D 2025, 2026 ve 2027 sürümlerinde tek kurulum paketiyle otomatik yüklenir.
+          </p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Nokta" data-en="Point">Nokta</span><span class="cmd">FNT_NOKTAEDITOR</span></div>
+            <h3 data-tr="Nokta Editörü" data-en="Point Editor">Nokta Editörü</h3>
+            <p data-tr="COGO noktalarını tablo üzerinden toplu düzenleme, filtreleme, kodlama ve hızlı şablon aktarımı."
+               data-en="Bulk edit, filter, re-code, and manage Civil 3D COGO points through an interactive grid.">
+              COGO noktalarını tablo üzerinden toplu düzenleme, filtreleme, kodlama ve hızlı şablon aktarımı.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Nokta" data-en="Point">Nokta</span><span class="cmd">FNT_3DPOINT</span></div>
+            <h3 data-tr="3D Polyline Nokta Üretici" data-en="3D Polyline Points">3D Polyline Nokta Üretici</h3>
+            <p data-tr="3D Polyline köşe ve kırık noktalarından hassas kotlu COGO noktalarını tek adımda oluşturma."
+               data-en="Extract accurate elevated COGO points directly from 3D Polyline vertices.">
+              3D Polyline köşe ve kırık noktalarından hassas kotlu COGO noktalarını tek adımda oluşturma.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Kesit" data-en="Section">Kesit</span><span class="cmd">FNT_KESITYONET</span></div>
+            <h3 data-tr="Kesit ve Yüzey Yöneticisi" data-en="Sample Line &amp; Surface Manager">Kesit ve Yüzey Yöneticisi</h3>
+            <p data-tr="Sample Line gruplarına yüzey ekleme, stil atama, kilometre aralığı filtreleme ve klasör düzeni."
+               data-en="Manage sample line groups, batch-add surfaces, update styles, and filter by station range.">
+              Sample Line gruplarına yüzey ekleme, stil atama, kilometre aralığı filtreleme ve klasör düzeni.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Kesit" data-en="Section">Kesit</span><span class="cmd">FNT_KESITYUZEY</span></div>
+            <h3 data-tr="Kesitten Yüzey Oluşturma" data-en="Section to Surface">Kesitten Yüzey Oluşturma</h3>
+            <p data-tr="Enkesit çizgilerini seçerek doğrudan 3B breakline ve TIN yüzey modeli üretme."
+               data-en="Generate 3D breaklines and TIN surfaces directly from cross-section geometry.">
+              Enkesit çizgilerini seçerek doğrudan 3B breakline ve TIN yüzey modeli üretme.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Kesit" data-en="Section">Kesit</span><span class="cmd">FNT_KESITPLAN</span></div>
+            <h3 data-tr="Kesit ⇄ Plan İki Yönlü İzdüşüm" data-en="Section ⇄ Plan Two-Way">Kesit ⇄ Plan İki Yönlü İzdüşüm</h3>
+            <p data-tr="Plandaki bir noktayı canlı olarak enkesitte, enkesitteki noktayı ise planda anlık takip ve işaretleme."
+               data-en="Bidirectional live projection between plan view and cross-section views.">
+              Plandaki bir noktayı canlı olarak enkesitte, enkesitteki noktayı ise planda anlık takip ve işaretleme.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Aktarım" data-en="Export">Aktarım</span><span class="cmd">FNT_EXPORTXML</span></div>
+            <h3 data-tr="Toplu Yüzey LandXML Aktarımı" data-en="Batch Surface LandXML Export">Toplu Yüzey LandXML Aktarımı</h3>
+            <p data-tr="Seçilen TIN yüzeylerini düzenli dosya adlarıyla tek seferde LandXML olarak dışa aktarma."
+               data-en="Batch export selected TIN surfaces cleanly into individual LandXML files.">
+              Seçilen TIN yüzeylerini düzenli dosya adlarıyla tek seferde LandXML olarak dışa aktarma.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag" data-tr="Aktarım" data-en="Export">Aktarım</span><span class="cmd">FNT_EXPORTKML</span></div>
+            <h3 data-tr="Google Earth KML / KMZ Aktarımı" data-en="Google Earth KML / KMZ Export">Google Earth KML / KMZ Aktarımı</h3>
+            <p data-tr="Güzergâh, çizim, tarama ve COGO noktalarını hafif ve yüksek hassasiyetli KML/KMZ dosyalarına dönüştürme."
+               data-en="Export alignments, geometry, hatches, and COGO points into lightweight KML/KMZ files.">
+              Güzergâh, çizim, tarama ve COGO noktalarını hafif ve yüksek hassasiyetli KML/KMZ dosyalarına dönüştürme.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="tag soon" data-tr="Yakında" data-en="Coming Soon">Yakında</span><span class="cmd">NETCAD &amp; ALTYAPI</span></div>
+            <h3 data-tr="NetCAD ve Altyapı Modülleri" data-en="NetCAD &amp; Infrastructure Modules">NetCAD ve Altyapı Modülleri</h3>
+            <p data-tr="NCZ dönüşüm yardımcıları ve altyapı hatlarına özel hesap/çizim araçları geliştirme aşamasında."
+               data-en="Dedicated NetCAD conversion helpers and utility infrastructure modules are in active development.">
+              NCZ dönüşüm yardımcıları ve altyapı hatlarına özel hesap/çizim araçları geliştirme aşamasında.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="kurulum">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-tr="30 Saniyede Kurulum" data-en="30-Second Installation">30 Saniyede Kurulum</h2>
+          <p data-tr="Yönetici şifresi istemez. Autodesk ApplicationPlugins (.bundle) standardıyla çalışır."
+             data-en="No administrator password needed. Uses the native Autodesk ApplicationPlugins (.bundle) format.">
+            Yönetici şifresi istemez. Autodesk ApplicationPlugins (.bundle) standardıyla çalışır.
+          </p>
+        </div>
+
+        <div class="install-grid">
+          <div class="card">
+            <div class="card-top">
+              <h3 data-tr="Kurulum Sihirbazı (EXE)" data-en="Setup Wizard (EXE)">Kurulum Sihirbazı (EXE)</h3>
+              <span class="tag green" data-tr="Kişisel PC" data-en="Personal PC">Kişisel PC</span>
+            </div>
+            <ol class="step-list">
+              <li><span class="step-num green">1</span><span data-tr="Yukarıdaki yeşil butondan güncel <code>.exe</code> kurulum dosyasını indirin." data-en="Download the latest <code>.exe</code> installer using the green button above.">Yukarıdaki yeşil butondan güncel <code>.exe</code> kurulum dosyasını indirin.</span></li>
+              <li><span class="step-num green">2</span><span data-tr="Açık olan AutoCAD / Civil 3D pencerelerini kapatın." data-en="Close any open AutoCAD / Civil 3D windows.">Açık olan AutoCAD / Civil 3D pencerelerini kapatın.</span></li>
+              <li><span class="step-num green">3</span><span data-tr="İndirilen <code>FiNeTCAD_v*.exe</code> dosyasına çift tıklayıp <strong>İleri → Kur</strong> adımlarını tamamlayın." data-en="Double-click <code>FiNeTCAD_v*.exe</code> and complete the <strong>Next → Install</strong> steps.">İndirilen <code>FiNeTCAD_v*.exe</code> dosyasına çift tıklayıp <strong>İleri → Kur</strong> adımlarını tamamlayın.</span></li>
+              <li><span class="step-num green">4</span><span data-tr="Civil 3D'yi açın; üst menüde <strong>FiNeTCAD</strong> sekmesi otomatik gelecektir." data-en="Open Civil 3D; the <strong>FiNeTCAD</strong> ribbon tab will appear automatically.">Civil 3D'yi açın; üst menüde <strong>FiNeTCAD</strong> sekmesi otomatik gelecektir.</span></li>
+            </ol>
+            <div class="tip-note" data-tr="Not: Windows SmartScreen uyarısı çıkarsa <strong>Ek bilgi → Yine de çalıştır</strong> seçeneğiyle devam edebilirsiniz."
+                 data-en="Note: If Windows SmartScreen appears, click <strong>More info → Run anyway</strong> to continue.">
+              Not: Windows SmartScreen uyarısı çıkarsa <strong>Ek bilgi → Yine de çalıştır</strong> seçeneğiyle devam edebilirsiniz.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <h3 data-tr="Taşınabilir Kurulum (ZIP)" data-en="Portable Setup (ZIP)">Taşınabilir Kurulum (ZIP)</h3>
+              <span class="tag" data-tr="Kurumsal PC" data-en="Corporate PC">Kurumsal PC</span>
+            </div>
+            <ol class="step-list">
+              <li><span class="step-num">1</span><span data-tr="Yukarıdaki mavi butondan güncel <code>.zip</code> paketini indirin ve bir klasöre çıkarın." data-en="Download the latest <code>.zip</code> package above and extract it to a folder.">Yukarıdaki mavi butondan güncel <code>.zip</code> paketini indirin ve bir klasöre çıkarın.</span></li>
+              <li><span class="step-num">2</span><span data-tr="Açık olan AutoCAD / Civil 3D pencerelerini kapatın." data-en="Close any open AutoCAD / Civil 3D windows.">Açık olan AutoCAD / Civil 3D pencerelerini kapatın.</span></li>
+              <li><span class="step-num">3</span><span data-tr="Klasör içindeki <code>FiNeTCAD_Kur.bat</code> dosyasına çift tıklayın." data-en="Double-click <code>FiNeTCAD_Kur.bat</code> inside the extracted folder.">Klasör içindeki <code>FiNeTCAD_Kur.bat</code> dosyasına çift tıklayın.</span></li>
+              <li><span class="step-num">4</span><span data-tr="Civil 3D'yi açın; üst menüde <strong>FiNeTCAD</strong> sekmesi otomatik gelecektir." data-en="Open Civil 3D; the <strong>FiNeTCAD</strong> ribbon tab will appear automatically.">Civil 3D'yi açın; üst menüde <strong>FiNeTCAD</strong> sekmesi otomatik gelecektir.</span></li>
+            </ol>
+            <div class="tip-note" data-tr="İpucu: Şirket bilgisayarı <code>.exe</code> indirmesini engelliyorsa bu yöntemi kullanın."
+                 data-en="Tip: Use this method if your company firewall blocks <code>.exe</code> downloads.">
+              İpucu: Şirket bilgisayarı <code>.exe</code> indirmesini engelliyorsa bu yöntemi kullanın.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <h3 data-tr="Elle Kurulum (.bundle)" data-en="Manual Setup (.bundle)">Elle Kurulum (.bundle)</h3>
+              <span class="tag soon" data-tr="Kısıtlı Ağlar" data-en="Restricted PCs">Kısıtlı Ağlar</span>
+            </div>
+            <p data-tr="Güvenlik politikası <code>.bat</code> dosyalarını da engelliyorsa kurulumu 10 saniyede elle yapabilirsiniz:"
+               data-en="If corporate policy also blocks <code>.bat</code> scripts, install manually in 10 seconds:">
+              Güvenlik politikası <code>.bat</code> dosyalarını da engelliyorsa kurulumu 10 saniyede elle yapabilirsiniz:
+            </p>
+            <ol class="step-list">
+              <li><span class="step-num">1</span><span data-tr="ZIP içindeki <code>FiNeTCAD.bundle</code> klasörünü kopyalayın." data-en="Copy the <code>FiNeTCAD.bundle</code> folder from the extracted ZIP.">ZIP içindeki <code>FiNeTCAD.bundle</code> klasörünü kopyalayın.</span></li>
+              <li><span class="step-num">2</span><span data-tr="Windows Gezgini adres çubuğuna aşağıdaki yolu yapıştırıp Enter'a basın:" data-en="Paste the path below into the File Explorer address bar and press Enter:">Windows Gezgini adres çubuğuna aşağıdaki yolu yapıştırıp Enter'a basın:</span></li>
+            </ol>
+            <div class="path-box">
+              <code id="pluginPath">%APPDATA%\Autodesk\ApplicationPlugins\</code>
+              <button type="button" id="copyPathBtn" class="copy-mini" data-tr="Kopyala" data-en="Copy">Kopyala</button>
+            </div>
+            <div class="tip-note" data-tr="Klasörü buraya yapıştırıp Civil 3D'yi açmanız yeterlidir."
+                 data-en="Paste the folder there and launch Civil 3D.">
+              Klasörü buraya yapıştırıp Civil 3D'yi açmanız yeterlidir.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="paketler">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-tr="Lisans ve Paketler" data-en="Licensing &amp; Plans">Lisans ve Paketler</h2>
+          <p data-tr="FiNeTCAD şu anda açık beta dönemindedir; tüm araçlar test sürecinde ücretsiz kullanılabilir."
+             data-en="FiNeTCAD is currently in open beta; all tools are free to use during this phase.">
+            FiNeTCAD şu anda açık beta dönemindedir; tüm araçlar test sürecinde ücretsiz kullanılabilir.
+          </p>
+        </div>
+
+        <div class="plan-grid">
+          <div class="plan-card">
+            <h3 data-tr="Ücretsiz" data-en="Free">Ücretsiz</h3>
+            <div class="plan-price" data-tr="0 ₺" data-en="$0">0 ₺</div>
+            <ul class="plan-list">
+              <li data-tr="Temel yardımcı araçlar" data-en="Core utility tools">Temel yardımcı araçlar</li>
+              <li data-tr="Civil 3D 2025 / 2026 / 2027 desteği" data-en="Civil 3D 2025 / 2026 / 2027 support">Civil 3D 2025 / 2026 / 2027 desteği</li>
+              <li data-tr="Otomatik sürüm güncelleyici" data-en="Built-in auto-updater">Otomatik sürüm güncelleyici</li>
+            </ul>
+          </div>
+
+          <div class="plan-card featured">
+            <div class="card-top">
+              <h3 data-tr="Beta / Premium Erişim" data-en="Beta / Premium Access">Beta / Premium Erişim</h3>
+              <span class="tag green" data-tr="Aktif" data-en="Active">Aktif</span>
+            </div>
+            <div class="plan-price" data-tr="Beta Süresince Ücretsiz" data-en="Free During Beta">Beta Süresince Ücretsiz</div>
+            <ul class="plan-list">
+              <li data-tr="Tüm Nokta, Kesit ve Aktarım araçları" data-en="All Point, Section, and Export tools">Tüm Nokta, Kesit ve Aktarım araçları</li>
+              <li data-tr="Eklenti içi istek ve hata bildirimi" data-en="In-app feedback &amp; issue tracking">Eklenti içi istek ve hata bildirimi</li>
+              <li data-tr="Makine ID bazlı hızlı lisans aktivasyonu" data-en="Instant Machine ID activation">Makine ID bazlı hızlı lisans aktivasyonu</li>
+            </ul>
+          </div>
+
+          <div class="plan-card">
+            <h3 data-tr="Kurumsal / Ekip" data-en="Enterprise / Team">Kurumsal / Ekip</h3>
+            <div class="plan-price" data-tr="İletişime Geçin" data-en="Contact Us">İletişime Geçin</div>
+            <ul class="plan-list">
+              <li data-tr="Çoklu cihaz ve şantiye ekibi lisanslama" data-en="Multi-seat site &amp; office licensing">Çoklu cihaz ve şantiye ekibi lisanslama</li>
+              <li data-tr="Projeye özel araç geliştirme" data-en="Custom workflow automation">Projeye özel araç geliştirme</li>
+              <li data-tr="Öncelikli teknik destek" data-en="Priority engineering support">Öncelikli teknik destek</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="iletisim">
+      <div class="container">
+        <div class="contact-box">
+          <h2 data-tr="Destek, Lisans ve İletişim" data-en="Support, Licensing &amp; Contact">Destek, Lisans ve İletişim</h2>
+          <p data-tr="Lisans aktivasyonu için Civil 3D içindeki <strong>Kimlik &amp; Lisans</strong> penceresinden Makine ID bilginizi paylaşabilir, her türlü teknik destek ve duyurular için aşağıdaki kanallardan ulaşabilirsiniz."
+             data-en="Share your Machine ID from the <strong>Identity &amp; License</strong> card inside Civil 3D for activation, or reach out through the channels below.">
+            Lisans aktivasyonu için Civil 3D içindeki <strong>Kimlik &amp; Lisans</strong> penceresinden Makine ID bilginizi paylaşabilir, her türlü teknik destek ve duyurular için aşağıdaki kanallardan ulaşabilirsiniz.
+          </p>
+
+          <div class="social-grid">
+            <a href="mailto:info@finetcad.com" class="social-btn mail" aria-label="E-posta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span>info@finetcad.com</span>
+            </a>
+
+            <a href="https://www.youtube.com/@FiNeTCAD" target="_blank" rel="noopener" class="social-btn yt" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+              <span>YouTube</span>
+            </a>
+
+            <a href="https://www.instagram.com/finetcad" target="_blank" rel="noopener" class="social-btn ig" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              <span>Instagram</span>
+            </a>
+
+            <a href="https://x.com/FiNeTCAD" target="_blank" rel="noopener" class="social-btn x" aria-label="X">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span>X (@FiNeTCAD)</span>
+            </a>
+
+            <a href="https://www.linkedin.com/in/finetcad" target="_blank" rel="noopener" class="social-btn li" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+
+            <!-- Udemy profili/kursu yayına girdiğinde aşağıdaki yorumu kaldırıp URL'yi yazman yeterli:
+            <a href="https://www.udemy.com/user/finet-cad/" target="_blank" rel="noopener" class="social-btn" aria-label="Udemy">
+              <span>Udemy</span>
+            </a>
+            -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="yil"></span> FiNeTCAD — Furkan TARAKÇI</span>
+      <span>AutoCAD Civil 3D 2025 / 2026 / 2027</span>
+    </div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "https://lnxuswzvzrefnmlefwpa.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_frw8c1otOtyOIpMRythYPA_zLLyjCUC";
+
+    let aktifDil = "tr";
+    let guncelSurum = "";
+    let exeHazir = false;
+
+    document.getElementById("yil").textContent = new Date().getFullYear();
+
+    function diliUygula(dil) {
+      aktifDil = dil;
+      document.documentElement.lang = dil;
+      document.getElementById("langToggle").textContent = dil === "tr" ? "EN" : "TR";
+
+      document.querySelectorAll("[data-tr]").forEach(el => {
+        el.innerHTML = dil === "tr" ? el.getAttribute("data-tr") : el.getAttribute("data-en");
+      });
+
+      if (guncelSurum) {
+        document.getElementById("liveVersion").textContent =
+          (dil === "tr" ? "Güncel Sürüm: v" : "Latest Release: v") + guncelSurum;
+        document.getElementById("zipBtnTitle").textContent =
+          (dil === "tr" ? "Taşınabilir Paket v" : "Portable Package v") + guncelSurum + " (ZIP)";
+        document.getElementById("exeBtnTitle").textContent =
+          (dil === "tr" ? "Kurulum Sihirbazı v" : "Setup Wizard v") + guncelSurum + " (EXE)";
+      }
+
+      if (!exeHazir) {
+        document.getElementById("exeBtnSub").textContent =
+          dil === "tr" ? "Kişisel bilgisayarlar için (Yakında aktif)" : "For personal PCs (Coming soon)";
+      }
+    }
+
+    document.getElementById("langToggle").addEventListener("click", () => {
+      diliUygula(aktifDil === "tr" ? "en" : "tr");
+    });
+
+    document.getElementById("copyPathBtn").addEventListener("click", async () => {
+      const yol = document.getElementById("pluginPath").textContent;
+      const btn = document.getElementById("copyPathBtn");
+      try {
+        await navigator.clipboard.writeText(yol);
+        btn.textContent = aktifDil === "tr" ? "Kopyalandı" : "Copied";
+        setTimeout(() => {
+          btn.textContent = aktifDil === "tr" ? "Kopyala" : "Copy";
+        }, 1800);
+      } catch {}
+    });
+
+    async function surumuCek() {
+      try {
+        const res = await fetch(
+          SUPABASE_URL + "/rest/v1/beta_ayarlari?id=eq.default&select=son_surum,indirme_url,exe_indirme_url",
+          { headers: { apikey: SUPABASE_KEY } }
+        );
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const rows = await res.json();
+        if (rows && rows.length > 0) {
+          guncelSurum = rows[0].son_surum || "";
+          const zipUrl = rows[0].indirme_url || "";
+          const exeUrl = rows[0].exe_indirme_url || "";
+
+          if (zipUrl) {
+            const zBtn = document.getElementById("downloadZipBtn");
+            zBtn.href = zipUrl;
+            zBtn.setAttribute("download", "");
+          }
+
+          if (exeUrl) {
+            exeHazir = true;
+            const eBtn = document.getElementById("downloadExeBtn");
+            eBtn.href = exeUrl;
+            eBtn.setAttribute("download", "");
+          }
+
+          diliUygula(aktifDil);
+        }
+      } catch {
+        document.getElementById("liveVersion").textContent = aktifDil === "tr" ? "Beta Aktif" : "Beta Active";
+      }
+    }
+
+    surumuCek();
+  </script>
+</body>
+</html>
