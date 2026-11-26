@@ -86,6 +86,11 @@
     .btn-green:hover { background: var(--green-hover); color: #fff; transform: translateY(-1px); }
     .btn-secondary { background: var(--card); color: var(--text); border-color: var(--border); }
     .btn-secondary:hover { border-color: var(--blue); transform: translateY(-1px); }
+    .btn.is-disabled {
+      opacity: 0.56;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
     .btn-sub { display: block; font-size: 0.74rem; font-weight: 500; opacity: 0.88; }
     .btn-col { text-align: left; line-height: 1.25; }
     .meta-note { font-size: 0.86rem; color: var(--muted); }
@@ -241,7 +246,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span class="btn-col">
               <span id="zipBtnTitle" data-tr="Taşınabilir Paket İndir (ZIP)" data-en="Download Portable Package (ZIP)">Taşınabilir Paket İndir (ZIP)</span>
-              <span class="btn-sub" data-tr="Kurumsal ve kısıtlı bilgisayarlar için" data-en="For corporate &amp; restricted PCs">Kurumsal ve kısıtlı bilgisayarlar için</span>
+              <span class="btn-sub" id="zipBtnSub" data-tr="Kurumsal ve kısıtlı bilgisayarlar için" data-en="For corporate &amp; restricted PCs">Kurumsal ve kısıtlı bilgisayarlar için</span>
             </span>
           </a>
         </div>
@@ -517,8 +522,27 @@
     let aktifDil = "tr";
     let guncelSurum = "";
     let exeHazir = false;
+    let zipHazir = false;
+    let veriYuklendi = false;
 
     document.getElementById("yil").textContent = new Date().getFullYear();
+
+    function butonDurumuUygula(btnId, subId, hazir, pasifTr, pasifEn, dil) {
+      const btn = document.getElementById(btnId);
+      const sub = document.getElementById(subId);
+      if (!btn || !sub || !veriYuklendi) return;
+
+      if (hazir) {
+        btn.classList.remove("is-disabled");
+        btn.removeAttribute("aria-disabled");
+      } else {
+        btn.classList.add("is-disabled");
+        btn.setAttribute("aria-disabled", "true");
+        btn.removeAttribute("href");
+        btn.removeAttribute("download");
+        sub.textContent = dil === "tr" ? pasifTr : pasifEn;
+      }
+    }
 
     function diliUygula(dil) {
       aktifDil = dil;
@@ -538,10 +562,23 @@
           (dil === "tr" ? "Kurulum Sihirbazı v" : "Setup Wizard v") + guncelSurum + " (EXE)";
       }
 
-      if (!exeHazir) {
-        document.getElementById("exeBtnSub").textContent =
-          dil === "tr" ? "Kişisel bilgisayarlar için (Yakında aktif)" : "For personal PCs (Coming soon)";
-      }
+      butonDurumuUygula(
+        "downloadExeBtn",
+        "exeBtnSub",
+        exeHazir,
+        "Kişisel bilgisayarlar için (Yakında aktif)",
+        "For personal PCs (Coming soon)",
+        dil
+      );
+
+      butonDurumuUygula(
+        "downloadZipBtn",
+        "zipBtnSub",
+        zipHazir,
+        "Kurumsal ve kısıtlı bilgisayarlar için (Yakında aktif)",
+        "For corporate & restricted PCs (Coming soon)",
+        dil
+      );
     }
 
     document.getElementById("langToggle").addEventListener("click", () => {
@@ -569,23 +606,29 @@
         if (!res.ok) throw new Error("HTTP " + res.status);
         const rows = await res.json();
         if (rows && rows.length > 0) {
-          guncelSurum = rows[0].son_surum || "";
-          const zipUrl = rows[0].indirme_url || "";
-          const exeUrl = rows[0].exe_indirme_url || "";
+          guncelSurum = (rows[0].son_surum || "").trim().replace(/^v/i, "");
+          const zipUrl = (rows[0].indirme_url || "").trim();
+          const exeUrl = (rows[0].exe_indirme_url || "").trim();
 
+          const zBtn = document.getElementById("downloadZipBtn");
           if (zipUrl) {
-            const zBtn = document.getElementById("downloadZipBtn");
+            zipHazir = true;
             zBtn.href = zipUrl;
             zBtn.setAttribute("download", "");
+          } else {
+            zipHazir = false;
           }
 
+          const eBtn = document.getElementById("downloadExeBtn");
           if (exeUrl) {
             exeHazir = true;
-            const eBtn = document.getElementById("downloadExeBtn");
             eBtn.href = exeUrl;
             eBtn.setAttribute("download", "");
+          } else {
+            exeHazir = false;
           }
 
+          veriYuklendi = true;
           diliUygula(aktifDil);
         }
       } catch {
